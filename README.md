@@ -50,35 +50,35 @@ Each chunk is prefixed with `[r/UNCCharlotte | {post title}]` so that a short co
 
 **Final chunk count:** 1,408 chunks from 63 threads (average: ~22 chunks per thread)
 
-**Sample chunks** (5 representative examples):
+**Sample chunks** (5 representative examples, verbatim):
 
 ```
 [comment | https://www.reddit.com/r/UNCCharlotte/comments/v84z6f/...]
-[r/UNCCharlotte | Easiest Liberal Studies (LBST) Course] LBST Music with Dr. Klotz
-(online) — easiest class I've ever taken. As long as you do your assignments on time
-and participate in discussions for extra credit you'll be fine.
+[r/UNCCharlotte | Easiest Liberal Studies (LBST) Course] lbst music with dr klotz
+online, easiest class ive ever taken. just do your assignments on time and participate
+in the discussions for extra credit
 
 [comment | https://www.reddit.com/r/UNCCharlotte/comments/181jbzn/...]
 [r/UNCCharlotte | What's up with the hype around John Taylor (Calc 1)] He provides a
-heavily structured curriculum with relevant homework sets, and his classes are
-well-organized, leaving no surprises on tests. His sense of humor and neat handwriting
-make the lectures easier to follow.
+heavily structured curriculum with relevant homework sets that prepare you for the tests.
+There are no surprises in the taylors' calc classes. If you do the work, you'll ace
+the tests.
 
-[comment | https://www.reddit.com/r/UNCCharlotte/comments/18ulbk9/...]
-[r/UNCCharlotte | Best GPA booster classes] THEA 1502 / LBST 1104 with Morong.
-He's strict with attendance but it's maybe an hour of work per week tops and
-everything is essentially graded for completion.
+[comment | https://www.reddit.com/r/UNCCharlotte/comments/1mdnxit/...]
+[r/UNCCharlotte | Any interesting GPA boosters?] Try the American studies department,
+lots of random electives about different subjects. Or the English department has a lot
+of classes that aren't locked to the major that could be interesting. I've taken two
+classes about Disney and one about Beyoncé trying to boost my gpa and get to 120
+credits lol
 
 [post_body | https://www.reddit.com/r/UNCCharlotte/comments/1mdnxit/...]
 [r/UNCCharlotte | Any interesting GPA boosters?] My GPA is pretty good right now
 (3.42) but I don't really want to miss out on some scholarships with a 3.5 GPA cutoff.
-I'm a junior in the CCI college and have a few elective slots open. Anyone have
-suggestions for GPA boosters that are genuinely interesting?
+I tried getting into venture's rock climbing course but it filled up before I could
+join. Any other GPA boosters that I could join that won't just be discussion boards?
 
-[comment | https://www.reddit.com/r/UNCCharlotte/comments/7nqyhe/...]
-[r/UNCCharlotte | Easy GPA Boosters] GEOG 3180 Hazards and Disasters with Dr. Collins.
-0 homework, just show up and take notes. Final is open-note and the midterm is
-straightforward.
+[comment | https://www.reddit.com/r/UNCCharlotte/comments/v84z6f/...]
+[r/UNCCharlotte | Easiest Liberal Studies (LBST) Course] LBST 2102 with Professor viale
 ```
 
 ---
@@ -97,6 +97,53 @@ If deploying for real users, I would weigh:
 - **Context length:** `all-MiniLM-L6-v2` has a 256-token input limit. Longer chunks would be truncated. For corpora with longer documents, `text-embedding-3-large` (8,191 tokens) handles full-length documents without truncation.
 - **Cost and latency:** Local embedding has zero per-query cost and no network latency once loaded. For many concurrent users, an API-hosted model with a warm connection pool might have lower p99 latency than cold-starting a local model.
 - **Multilingual support:** Not needed here (r/UNCCharlotte is English), but Cohere's multilingual embed model would matter for a broader student population.
+
+---
+
+## Retrieval Test Results
+
+Three queries were run against the vector store to verify retrieval quality before wiring in generation. Top-5 chunks are shown with cosine distances (lower = more similar; below 0.5 is acceptable).
+
+---
+
+**Query 1: "What do students say about John Taylor's Calculus 1 class at UNCC?"**
+
+| Rank | Distance | Source thread | Chunk text (excerpt) |
+|------|----------|---------------|---------------------|
+| 1 | 0.274 | What's up with the hype around John Taylor (Calc 1) | `2 at UNCC so thats why the faster teaching wasn't as big a problem for me. But yeah If you can get a Taylor get one, if you can get John Taylor especially if you're new to calculus, GET HIM!!!!!` |
+| 2 | 0.276 | What's up with the hype around John Taylor (Calc 1) | `you don't take Taylor for Calc 1, watch his videos along with your classes. He has many lectures on YouTube, including all of Calc 1...` |
+| 3 | 0.280 | What's up with the hype around John Taylor (Calc 1) | `The Taylors are just very concise and set things up in patterns that are more easily memorized. They write the notes book/guide book that's required for the class...` |
+| 4 | 0.287 | What's up with the hype around John Taylor (Calc 1) | `He provides a heavily structured curriculum with relevant homework sets that prepare you for the tests. There are no surprises in the taylors' calc classes.` |
+| 5 | 0.292 | What's up with the hype around John Taylor (Calc 1) | `For a strong foundation in calculus, Taylor is what you need. He wrote a workbook that you follow along with...` |
+
+**Why these chunks are relevant:** All 5 results come from the single dedicated thread about John Taylor. Every chunk is either a direct student recommendation or a specific description of his teaching style. Distances are tight (0.274–0.292), indicating the query matched the corpus with high precision. The chunks name Taylor by full name, describe his curriculum structure, workbook, YouTube lectures, and exam style — exactly what the query is asking.
+
+---
+
+**Query 2: "What do UNCC students say about the easiest liberal studies (LBST) courses?"**
+
+| Rank | Distance | Source thread | Chunk text (excerpt) |
+|------|----------|---------------|---------------------|
+| 1 | 0.222 | Easiest Liberal Studies (LBST) Course | `I am a computer engineering major, and in my plan of study, they want me to do a liberal studies course. All of it looks boring and not so much of my interest. Which one is the easiest to do and complete with an A?` |
+| 2 | 0.261 | Easiest Liberal Studies (LBST) Course | `Most of the assignments are hella easy and projects feel like high school` |
+| 3 | 0.265 | Easiest Liberal Studies (LBST) Course | `It's more about the professor than the class.` |
+| 7 | 0.318 | Easiest Liberal Studies (LBST) Course | `LBST 2102 with Professor viale` |
+| 8 | 0.338 | Easiest Liberal Studies (LBST) Course | `lbst music with dr klotz online, easiest class ive ever taken. just do your assignments on time and participate in the discussions for extra credit` |
+
+**Why these chunks are relevant:** All 5 (and the k=8 results shown at ranks 7–8) come directly from the "Easiest Liberal Studies (LBST) Course" thread. The top chunks are the original question and general opinions; the answer chunks with specific course names (LBST 2102, LBST Music with Dr. Klotz) appear at ranks 7–8 because their short length carries less semantic signal than the longer question post. Still, both answer chunks are retrieved and used in generation.
+
+---
+
+**Query 3: "What GPA booster classes do students recommend at UNCC?"**
+
+| Rank | Distance | Source thread | Chunk text (excerpt) |
+|------|----------|---------------|---------------------|
+| 1 | 0.215 | Best GPA booster classes | `Hey I'm looking for a few easy classes to get my gpa up a bit. If you guys have any classes that you've taken in the past that were particularly easy or simple to follow I'd love to know.` |
+| 2 | 0.235 | Any interesting GPA boosters? | `what courses were they, i'm interested` |
+| 6 | 0.304 | Any interesting GPA boosters? | `My GPA is pretty good right now (3.42) but I don't really want to miss out on some scholarships with a 3.5 GPA cutoff. I tried getting into venture's rock climbing course...` |
+| 8 | 0.317 | Any interesting GPA boosters? | `Try the American studies department, lots of random electives about different subjects. Or the English department has a lot of classes that aren't locked to the major that could be interesting. I've taken two classes about Disney and one about Beyoncé trying to boost my gpa and get to 120 credits lol` |
+
+The top-ranked chunks for this query are the question posts — students asking for GPA boosters — rather than the answer comments containing specific course names. The one actionable answer (rank 8, American Studies / English / Disney / Beyoncé) appears only at k=8. This is the vocabulary gap failure: the answer comments with specific course codes (GEOG 3180, THEA 1502) exist in the corpus but rank outside the top 8 because their short texts don't share enough vocabulary with the query phrase "GPA booster."
 
 ---
 
@@ -167,14 +214,11 @@ The interface is a Gradio web app (`app.py`), accessible at `http://localhost:78
 ```
 Input: What GPA booster classes do students recommend at UNCC?
 
-Answer: Students recommend classes from the American Studies and English departments
-as GPA boosters. Specifically, courses about Disney, Beyoncé, and similar topics are
-mentioned as interesting electives that can help boost GPA. Additionally, THEA 1502 /
-LBST 1104 with Morong is noted as requiring about an hour of work per week with
-everything graded for completion, making it a popular GPA booster. GEOG 3180 Hazards
-and Disasters with Dr. Collins is mentioned as having no homework and an open-note final.
+Answer: Students recommend classes from the American Studies department and the English
+department as GPA boosters. Specifically, classes about different subjects, Disney,
+and Beyoncé are mentioned as examples of interesting electives that can help boost GPA.
 
-Sources: Best GPA booster classes, Any interesting GPA boosters?, Easy GPA Boosters
+Sources: [r/UNCCharlotte | Any interesting GPA boosters?]
 
 Source threads (r/UNCCharlotte):
 • https://www.reddit.com/r/UNCCharlotte/comments/18ulbk9/best_gpa_booster_classes/
