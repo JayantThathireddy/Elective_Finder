@@ -17,22 +17,25 @@ Official channels — the course catalog, department websites, and advisor meeti
 
 ## Documents
 
-Sources are Reddit threads from r/uncc collected via the public JSON API. Searches used the following queries against r/uncc with `sort=top&t=all`: "elective", "easy class", "course recommendation", "professor recommendation", "GPA booster", "liberal studies", "writing intensive", "best professor", "what classes should I take".
+Sources are Reddit threads from r/UNCCharlotte, collected using Playwright (a headless browser) to bypass Reddit's 2025 API lockdown on unauthenticated access. Searches used the following queries against r/UNCCharlotte with `sort=top&t=all`: "course recommendation", "easy class", "elective", "professor recommendation", "GPA booster", "liberal studies", "writing requirement", "best professor", "what classes should I take", "easy courses", "class advice", "ITCS recommendation".
 
 | # | Source | Description | URL or location |
 |---|--------|-------------|-----------------|
-| 1 | r/uncc Reddit thread | Students asking for easy elective recommendations | https://www.reddit.com/r/uncc/ (search: "elective") |
-| 2 | r/uncc Reddit thread | Students asking about GPA booster courses | https://www.reddit.com/r/uncc/ (search: "GPA booster") |
-| 3 | r/uncc Reddit thread | Students asking about course recommendations | https://www.reddit.com/r/uncc/ (search: "course recommendation") |
-| 4 | r/uncc Reddit thread | Students asking about easy classes | https://www.reddit.com/r/uncc/ (search: "easy class") |
-| 5 | r/uncc Reddit thread | Students asking about professor recommendations | https://www.reddit.com/r/uncc/ (search: "professor recommendation") |
-| 6 | r/uncc Reddit thread | Students asking about liberal studies requirements | https://www.reddit.com/r/uncc/ (search: "liberal studies") |
-| 7 | r/uncc Reddit thread | Students asking about writing intensive courses | https://www.reddit.com/r/uncc/ (search: "writing intensive") |
-| 8 | r/uncc Reddit thread | Students asking for best professors | https://www.reddit.com/r/uncc/ (search: "best professor") |
-| 9 | r/uncc Reddit thread | Students asking what classes to take | https://www.reddit.com/r/uncc/ (search: "what classes should I take") |
-| 10 | r/uncc Reddit thread | Top-voted course advice posts from r/uncc | https://www.reddit.com/r/uncc/ (top posts, course-related) |
+| 1 | r/UNCCharlotte | What's up with the hype around John Taylor (Calc 1) | https://www.reddit.com/r/UNCCharlotte/comments/181jbzn/ |
+| 2 | r/UNCCharlotte | Best GPA booster classes | https://www.reddit.com/r/UNCCharlotte/comments/18ulbk9/ |
+| 3 | r/UNCCharlotte | Easy GPA Boosters | https://www.reddit.com/r/UNCCharlotte/comments/7nqyhe/ |
+| 4 | r/UNCCharlotte | Any interesting GPA boosters? | https://www.reddit.com/r/UNCCharlotte/comments/1mdnxit/ |
+| 5 | r/UNCCharlotte | Easiest Liberal Studies (LBST) Course | https://www.reddit.com/r/UNCCharlotte/comments/v84z6f/ |
+| 6 | r/UNCCharlotte | LBST courses? | https://www.reddit.com/r/UNCCharlotte/comments/4clp16/ |
+| 7 | r/UNCCharlotte | Elective class recommendations | https://www.reddit.com/r/UNCCharlotte/comments/1kp7521/ |
+| 8 | r/UNCCharlotte | What are some easy classes for my non-business elective | https://www.reddit.com/r/UNCCharlotte/comments/apzhcu/ |
+| 9 | r/UNCCharlotte | Easiest classes to take for credits?? | https://www.reddit.com/r/UNCCharlotte/comments/ox7jv6/ |
+| 10 | r/UNCCharlotte | MATH 1103 and ITCS 3688 Professors | https://www.reddit.com/r/UNCCharlotte/comments/k5oivt/ |
+| 11 | r/UNCCharlotte | Recommended Teachers for spring classes | https://www.reddit.com/r/UNCCharlotte/comments/59c47d/ |
+| 12 | r/UNCCharlotte | Remember: Pick your professors, not your classes | https://www.reddit.com/r/UNCCharlotte/comments/13u6y6q/ |
+| 13–63 | r/UNCCharlotte | Additional advice, campus guide, and course threads | documents/*.json (url field in each file) |
 
-Exact thread URLs are embedded in each saved JSON file in the `documents/` folder as the `url` field.
+63 thread files collected total. All are from r/UNCCharlotte. Exact URLs embedded in each `documents/*.json` file.
 
 ---
 
@@ -53,9 +56,9 @@ Treating each comment as its own chunk makes sense because:
 
 The 75-character overlap is small by design. When a long comment does get split, the overlap carries the tail of the prior sentence into the next chunk, preventing the most common boundary problem (losing the beginning of a thought). It doesn't need to be large because we're not dealing with long-form prose where context builds over many paragraphs.
 
-Each chunk is prefixed with `[r/uncc | {post title}]` so that even a short comment like "Yes, loved that class" carries enough context for the embedding model to understand what the comment is about.
+Each chunk is prefixed with `[r/UNCCharlotte | {post title}]` so that even a short comment like "Yes, loved that class" carries enough context for the embedding model to understand what the comment is about.
 
-**Final chunk count:** Updated after corpus collection — target range is 150–800 chunks across 10–20 threads.
+**Final chunk count:** 1,408 chunks from 63 threads (average ~22 chunks per thread).
 
 ---
 
@@ -65,7 +68,7 @@ Each chunk is prefixed with `[r/uncc | {post title}]` so that even a short comme
 
 This model runs locally with no API key or rate limits, produces 384-dimensional embeddings, and is fast enough to embed several hundred chunks in under a minute on CPU. It was designed for semantic similarity tasks and performs well on short, informal text — which matches our Reddit comment corpus.
 
-**Top-k:** 5
+**Top-k:** 8 (increased from initial spec of 5 after observing that k=5 retrieved question posts but not enough answer comments)
 
 Retrieving 5 chunks gives the LLM enough different perspectives to synthesize an answer without flooding the context with loosely related content. At k=5 with ~150 chars of usable content per chunk on average, the total context passed to the LLM is roughly 750–3000 characters — well within the model's limit and focused enough to stay on-topic.
 
@@ -76,7 +79,7 @@ If deploying this for real users, I would weigh:
 - **Accuracy on informal text**: `all-MiniLM-L6-v2` is a general-purpose model. A domain-adapted model (fine-tuned on academic or student forum text) would likely produce more precise embeddings for queries like "which professor grades easy." OpenAI's `text-embedding-3-large` or Cohere's `embed-v3` would be candidates — higher accuracy but API cost and rate limits.
 - **Context length**: `all-MiniLM-L6-v2` has a 256-token input limit; longer chunks would get truncated. For a corpus with longer documents, a model like `text-embedding-3-large` (8191 tokens) would handle those without truncation.
 - **Latency**: Local models add startup time but have zero per-query API cost and no network latency once loaded. For a production system with many concurrent users, an API-hosted model with a warm connection pool might have lower p99 latency.
-- **Multilingual support**: Not needed here (r/uncc is English), but Cohere's multilingual embed model would matter for a broader university audience.
+- **Multilingual support**: Not needed here (r/UNCCharlotte is English), but Cohere's multilingual embed model would matter for a broader university audience.
 
 ---
 
@@ -84,13 +87,11 @@ If deploying this for real users, I would weigh:
 
 | # | Question | Expected answer |
 |---|----------|-----------------|
-| 1 | What UNCC courses do students recommend as easy electives for non-majors? | Names of specific courses (e.g., introductory music, art, or LBST courses) with comments about low workload or easy grading |
-| 2 | Which UNCC professors are most recommended by students for undergraduate courses? | Names of specific professors with positive feedback about teaching style, helpfulness, or fair grading |
-| 3 | What do students say about UNCC courses that satisfy the liberal studies writing requirement? | Specific course names or professor names for writing-intensive courses, with opinions on workload |
-| 4 | Are there any UNCC courses that students consider GPA boosters? | Specific course names mentioned as easy A's or grade-friendly, with student reasoning |
-| 5 | What advice do UNCC students give about picking electives as a freshman or sophomore? | General advice about course load, which departments have easy courses, timing, and registration tips |
-
-*Note: Expected answers will be updated with specific course/professor names after the corpus is collected and reviewed.*
+| 1 | What GPA booster classes do students recommend at UNCC? | Specific course names: GEOG 3180 (Hazards and Disasters with Dr. Collins), THEA 1502/LBST 1104 with Morong, ROTC, business ethics and film; comment on low workload or easy grading |
+| 2 | Which professors do UNCC students recommend for undergraduate courses? | Names of specific professors with positive teaching comments: John Taylor (Calc 1), Aileen Benedict (ITCS 3162), Morong (THEA), Dr. Klotz (LBST Music) |
+| 3 | What do UNCC students say about the easiest liberal studies (LBST) courses? | LBST 2102 with Professor Viale, LBST Music with Dr. Klotz (online), LBST geography with Barbara John; opinions on workload |
+| 4 | What do students say about John Taylor's Calculus 1 class at UNCC? | Discussion of John Taylor's structured teaching, workbook, neat handwriting, no surprises on exams; highly recommended |
+| 5 | What is the best sushi restaurant in Charlotte? | System should refuse: "I don't have enough information in the available student discussions to answer that." |
 
 ---
 
@@ -113,10 +114,10 @@ If deploying this for real users, I would weigh:
 
   [1] Document Ingestion          [2] Chunking
   ──────────────────────          ─────────────
-  Reddit JSON API                 chunk.py
-  (requests, no auth)    ──────►  Per-comment + post-body chunks
+  Playwright browser              chunk.py
+  (r/UNCCharlotte)       ──────►  Per-comment + post-body chunks
   ingest.py                       600 char max, 75 char overlap
-  Saves: documents/*.json         Prefix: [r/uncc | {post title}]
+  Saves: documents/*.json         Prefix: [r/UNCCharlotte | {post title}]
                                   Saves: in-memory list of dicts
          │
          ▼
@@ -124,7 +125,7 @@ If deploying this for real users, I would weigh:
   ────────────────────────────    ─────────────
   embed.py                        retrieve.py
   Model: all-MiniLM-L6-v2  ────►  Query → embed → ChromaDB.query()
-  (sentence-transformers)         top-k=5, returns chunks + distances
+  (sentence-transformers)         top-k=8, returns chunks + distances
   Store: ChromaDB (local)         + source metadata
   Path: ./chroma_db/
          │

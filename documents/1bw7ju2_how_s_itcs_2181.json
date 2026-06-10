@@ -1,0 +1,67 @@
+{
+  "thread_id": "1bw7ju2",
+  "title": "How's ITCS 2181?",
+  "url": "https://www.reddit.com/r/UNCCharlotte/comments/1bw7ju2/hows_itcs_2181/",
+  "subreddit": "UNCCharlotte",
+  "score": 2,
+  "author": "KING-E-N-X",
+  "body": "Anyone currently or has previously taken 2181? If so, what all will you be doing in this class, is it harder than 1212 and 1213? Any online recourses you recommend giving a look at to get ahead for this course? I can't seem to find too much info about this course, apparently this course was introduced last year supposedly. Thanks",
+  "comments": [
+    {
+      "comment_id": "t1_ky4s7ld",
+      "author": "wesh-919",
+      "body": "I took it last semester. Rough. very rushed through and its a lot thrown at you, especially a young cs student. I was able to handle linux/unix & most of the basic c, but a lot of memory operations and all that jazz is in it as well as a deep dive into RISCV.\n\nI had Bahamon, he knew what he taught but he was a stickler on things. Late penalties left and right.",
+      "score": 5,
+      "depth": 0
+    },
+    {
+      "comment_id": "t1_ky4xjs7",
+      "author": "KING-E-N-X",
+      "body": "what about it is rough? Trick questions on quizzes or just hard programming labs?",
+      "score": 1,
+      "depth": 1
+    },
+    {
+      "comment_id": "t1_ky5ohjc",
+      "author": "LordOfThe_Pings",
+      "body": "It’s difficult for the same reason calc 2 is difficult. They introduce a ton of content without giving you enough time to grasp everything.",
+      "score": 3,
+      "depth": 2
+    },
+    {
+      "comment_id": "t1_ky5tmby",
+      "author": "Living_Weight_3413",
+      "body": "The course is just an easier/lower level version that was offered previously. Before last year it was a 3000 level course. Overall, it’s like any other cs course which requires you to really practice and spend time learning the material. Good luck!",
+      "score": 2,
+      "depth": 0
+    },
+    {
+      "comment_id": "t1_kydv7y4",
+      "author": "Thor7473",
+      "body": "I took the course that 2181 replaced (ITCS 3181), so I can't speak directly to the content, however I assume that the topics are going to be generally the same. To put it bluntly, it is a hard class, and will require a lot of time and effort to do well in. It introduces a lot of topics that many young CS students will have never encountered before (linux terminal, RISCV Assembly code, memory operations and C programming) being the main ones. That being said, if you take it with professor Yan and apply yourself / make use of class resources there is no reason you shouldn't do well.",
+      "score": 1,
+      "depth": 0
+    },
+    {
+      "comment_id": "t1_kye2yiu",
+      "author": "Fragrant_Dog_358",
+      "body": "It’s not too bad I took it last sem but a majority of the issues I had with the class was because it was a new class and not the actual curriculum itself. It starts off with Linux command and comp arch vocabulary then moves on to basic C then you touch a little more advanced topics like pointers, pointer arithmetic and memory allocation finally you learn RISC V which is an assembly language and finish off the sem with intro to operating systems. The entire class itself seems a like a sophmore lvl class difficulty wise (feels a little harder than 2175 imo) but it’s the perfect class to set you up for operating systems (3146) but I highly recommend at least taking 1213 before it bcuz I believe coming into 2181 with only prior knowledge of 1212 might make it a little more difficult.",
+      "score": 1,
+      "depth": 0
+    },
+    {
+      "comment_id": "t1_kyf0mpc",
+      "author": "KING-E-N-X",
+      "body": "I'll be finishing 1213 this semester, and I already have a bit of knowledge of C and pointers from watching CS50 some time ago. So I guess that's good.",
+      "score": 1,
+      "depth": 1
+    },
+    {
+      "comment_id": "t1_kylfvhc",
+      "author": "Lemon1zer",
+      "body": "I’m taking the class this semester, and I’m still in 1213. The first 3 modules were pretty content heavy, but not to difficult to understand. It covered things like how a CPU is built and structured, different Linux commands, and the 3rd module was a basic intro to C (similar to our intro to Java in 1213, but my professor moved through it very fast). The next set of units I found pretty hard to conceptually understand. We looked at how to allocate memory using a C program, the number system (like binary and hexadecimal), and right now we’re learning about an Assembly Language called RISC-V.\n\nSo to actually answer your question, I found it to be the case that the modules in 2181 get progressively harder. I think your professor will influence how you do in the course. Mine is Yan Yonghon, and he doesn’t do multiple choice tests; all short-response. However I have a friend who’s also in 1213 (and taking 2181), but their professor only gives them 3 short response, and the rest multiple choice. If you finish 1213 and remember most of the content, I think you’ll have an easier time in the course than me.",
+      "score": 1,
+      "depth": 0
+    }
+  ]
+}
