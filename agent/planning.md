@@ -9,7 +9,7 @@
 
 ## Domain
 
-This system covers **elective course and professor recommendations for UNCC (UNC Charlotte) students**, sourced from student discussions on the r/uncc subreddit.
+This system covers **elective course and professor recommendations for UNCC (UNC Charlotte) students**, sourced from student discussions on the r/UNCCharlotte subreddit.
 
 Official channels — the course catalog, department websites, and advisor meetings — tell you what a course covers and how many credits it gives. They do not tell you whether a professor grades fairly, whether the workload is manageable alongside other commitments, or which courses students actually found worthwhile. Students figure this out by asking each other on Reddit, Discord, and in the hallways — but that knowledge is scattered across hundreds of threads with no way to search it systematically. This system makes that student-generated knowledge searchable and answerable.
 
